@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import RegisterForm, AddRecordForm
 from .models import Record
 
 # Create your views here.
@@ -50,3 +50,46 @@ def register_user(request):
         form = RegisterForm()
         return render(request, 'register.html', {'form':form})
     return render(request, 'register.html', {'form':form})
+
+def customer_record(request, pk):
+    if request.user.is_authenticated:
+        customer_record = Record.objects.get(pk=pk)
+        return render(request, 'record.html', {'customer_record':customer_record})
+    else:
+        messages(request, "You must be logged in to view the records")
+        return redirect('home')
+
+def delete_record(request, pk):
+    delete_it = Record.objects.get(id=pk)
+    delete_it.delete()
+    messages.success(request, "Record Deleted Successfully...")
+    return redirect('home')
+
+def add_record(request):
+    form = AddRecordForm()
+    # if request.user.is_authenticated:
+    if request.method == "POST":
+        form = AddRecordForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Record Added...")
+            return redirect('home')
+    else:
+        return render(request, 'add_record.html', {'form':form})
+    return render(request, 'add_record.html', {'form':form})
+    # else:
+    #     messages.success(request, "You must be Logged In...")
+    #     return redirect('home')
+
+def update_record(request, pk):
+    if request.user.is_authenticated:
+        current_record = Record.objects.get(id=pk)
+        form = AddRecordForm(request.POST or None, instance=current_record)#this prepopulates the form
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Record Has Been Updated!")
+            return redirect('home')
+        return render(request, 'update_record.html', {'form':form})
+    else:
+        messages.success(request, "You Must Be logged In...")
+        return redirect('home')
