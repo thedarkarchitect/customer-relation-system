@@ -2,8 +2,42 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-<h1>hello!</h1>
+<h1>Customer Records</h1>
+<br>
+<table class="table table-success table-hover table-borderless" >
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">City</th>
+            <th scope="col">Address</th>
+            <th scope="col">State</th>
+            <th scope="col">Zipcode</th>
+            <th scope="col">Created_At</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if records %}
+        {% for record in records %}
+        <tr>
+            <td>{{ record.id }}</td>  
+            <td>{{ record.first_name }} {{ record.last_name }}</td>
+            <td>{{ record.email }}</td>
+            <td>{{ record.phone }}</td>
+            <td>{{ record.address }}</td>
+            <td>{{ record.city }}</td>
+            <td>{{ record.state }}</td>
+            <td>{{ record.zipcode }}</td>
+            <td>{{ record.created_at }}</td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
 {% else %}
+
 <div class="col-md-6 offset-md-3">
     <h1>Login</h1>
     <br>
@@ -14,7 +48,7 @@
                 <input type="text" class="form-control" name="username" placeholder="username" required>
             </div>
             <div class="mb-3">
-                <input type="password" class="form-control" name="password" placeholder="password" required>
+                <input type="password" class="form-control" name="password1" placeholder="password" required>
             </div>
             <br>
             <button type="submit" class="btn btn-outline-success">Login</button>

@@ -3,9 +3,22 @@
 <div class="col-md-6 offset-md-3">
 <h1>Register Here!</h1>
 <br>
-<form method="POST" action="{% url 'home' %}">
+<form method="POST" >
     {% csrf_token%}
-    {{form.as_p}}
+
+    {% if form.errors %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Your Form Has errors
+            {% for field in form %}
+                {% if field.errors %}
+                    {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="CLose"></button>
+        </div>
+    {% endif %}
+
+    {{ form.as_p }}
     <button type="submit" class="btn btn-outline-success">
         Register
     </button>
